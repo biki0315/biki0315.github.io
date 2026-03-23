@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>山海記憶・水湳洞｜官方導覽地圖</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* 封面照 override */
+    .hs-hero-bg {
+      background-image: url('https://biki0315.github.io/images/hero.jpg');
+      background-size: cover;
+      background-position: center 40%;
+      background-color: #4A4820;
+    }
+    .hs-hero-bg::before {
+      background: linear-gradient(
+        to bottom,
+        rgba(28, 26, 10, .62) 0%,
+        rgba(28, 26, 10, .28) 38%,
+        rgba(28, 26, 10, .28) 62%,
+        rgba(28, 26, 10, .68) 100%
+      ) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       TOP NAV — always visible
+  ══════════════════════════════════════ -->
+  <nav class="top-nav" id="topNav">
+    <div class="nav-brand">
+      <span class="nav-kana">みずながとう</span>
+      <span class="nav-title">山海記憶・水湳洞</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-view="history">
+        <span class="nav-tab-jp">歴史</span>
+        <span class="nav-tab-zh">歷史文化</span>
+      </button>
+      <button class="nav-tab" data-view="map">
+        <span class="nav-tab-jp">景観</span>
+        <span class="nav-tab-zh">景點</span>
+      </button>
+      <button class="nav-tab" data-view="food">
+        <span class="nav-tab-jp">食事</span>
+        <span class="nav-tab-zh">餐廳</span>
+      </button>
+      <button class="nav-tab" data-view="stay">
+        <span class="nav-tab-jp">宿泊</span>
+        <span class="nav-tab-zh">住宿</span>
+      </button>
+      <button class="nav-tab" data-view="video">
+        <span class="nav-tab-jp">動画</span>
+        <span class="nav-tab-zh">影音遊記</span>
+      </button>
+      <button class="nav-tab" data-view="links">
+        <span class="nav-tab-jp">資源</span>
+        <span class="nav-tab-zh">網路資源</span>
+      </button>
+    </div>
+    <button class="nav-locate" id="locateBtn" title="定位">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+      </svg>
+    </button>
+    <button class="nav-hamburger" id="menuToggle">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       VIEW: 歷史文化 (default / home)
+  ══════════════════════════════════════ -->
+  <div class="view" id="view-history">
+
+    <!-- Hero -->
+    <div class="hs-hero">
+      <div class="hs-hero-bg"></div>
+      <div class="hs-hero-content">
+        <p class="hs-hero-kana">やまうみのきおく</p>
+        <h1 class="hs-hero-title">山海記憶</h1>
+        <p class="hs-hero-sub">礦業百年，靜待君來</p>
+        <p class="hs-hero-desc">新北市瑞芳區・水湳洞山城<br>從黃金年代的喧囂到如今的靜謐，每塊岩石都藏著故事。</p>
+        <div class="hs-hero-badges">
+          <span class="hs-badge">百年礦業歷史</span>
+          <span class="hs-badge">陰陽海奇景</span>
+          <span class="hs-badge">天空之城遺址</span>
+        </div>
+      </div>
+      <div class="hs-hero-scroll-hint">
+        <span>探索六大歷史篇章</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </div>
+    </div>
+
+    <!-- Timeline content -->
+    <div class="hs-body">
+
+      <div class="hs-intro">
+        <div class="hs-intro-line"></div>
+        <p class="hs-intro-text">六大歷史篇章・時間軸</p>
+      </div>
+
+      <!-- Era 01 -->
+      <article class="era" id="era-01">
+        <div class="era-aside">
+          <div class="era-num-jp">一</div>
+          <div class="era-year">1896</div>
+          <div class="era-label">日治初期</div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-content">
+          <div class="era-img era-img-mine">
+            <div class="era-img-label">金銅礦坑・開採現場</div>
+          </div>
+          <div class="era-text-block">
+            <span class="era-tag">01 · 金銅礦業</span>
+            <h2 class="era-title">金銅礦業的黃金年代</h2>
+            <p class="era-p">1895年日本領台後，積極調查礦產資源，發現瑞芳一帶蘊含豐沛的金、銀、銅礦脈。1896年，日本藤田組取得採礦權，水湳洞從寧靜漁村一夕蛻變為採礦重鎮，啟動長達半世紀的礦業繁榮。</p>
+            <p class="era-p">全盛時期，黃金與銅礦的日產量驚人，礦石從蜿蜒坑道輸送至選煉廠，再轉運基隆港出口。水湳洞礦產收益，曾是日本殖民政府在台灣最重要的財源之一。</p>
+            <div class="era-chips">
+              <span>藤田組採礦</span><span>金銅礦脈</span><span>殖民時代經濟</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Era 02 -->
+      <article class="era era-reverse" id="era-02">
+        <div class="era-aside">
+          <div class="era-num-jp">二</div>
+          <div class="era-year">1933</div>
+          <div class="era-label">選煉廠落成</div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-content">
+          <div class="era-img era-img-ruin">
+            <div class="era-img-label">十三層遺址・天空之城</div>
+          </div>
+          <div class="era-text-block">
+            <span class="era-tag">02 · 十三層遺址</span>
+            <h2 class="era-title">十三層遺址的誕生</h2>
+            <p class="era-p">1933年，台灣礦業株式會社在水湳洞山坡興建大型選礦廠，廠房依山勢層疊而建，共十三層樓高，俗稱「十三層」。廠內引進當時最先進的浮選法，從低品位礦石中高效萃取金銀銅。</p>
+            <p class="era-p">鼎盛時期員工逾千人，晝夜運轉。如今廠房外牆斑駁鏽紅，層疊的混凝土骨架矗立山腰，被喻為「台灣的天空之城」，是全台最壯觀的工業遺址之一。</p>
+            <div class="era-chips">
+              <span>浮選技術</span><span>天空之城</span><span>工業遺產</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Era 03 -->
+      <article class="era" id="era-03">
+        <div class="era-aside">
+          <div class="era-num-jp">三</div>
+          <div class="era-year">礦業</div>
+          <div class="era-label">地質奇景</div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-content">
+          <div class="era-img era-img-yinyang">
+            <div class="era-img-label">陰陽海・金藍交界</div>
+          </div>
+          <div class="era-text-block">
+            <span class="era-tag">03 · 陰陽海</span>
+            <h2 class="era-title">陰陽海的成因</h2>
+            <p class="era-p">坑道中的黃鐵礦（FeS₂）與空氣、地下水接觸後，氧化生成硫酸亞鐵，礦坑廢水帶著高濃度鐵離子順著濂洞溪流入海灣，使近岸海水呈金黃褐色，而外海仍維持湛藍。</p>
+            <p class="era-p">兩色在海面涇渭分明，猶如太極陰陽，因此得名。台灣環保署多次確認這是自然礦物化學反應，並非人為污染，是水湳洞最珍貴的地質名片。</p>
+            <div class="era-chips">
+              <span>FeS₂黃鐵礦</span><span>鐵離子染色</span><span>自然奇觀</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Era 04 -->
+      <article class="era era-reverse" id="era-04">
+        <div class="era-aside">
+          <div class="era-num-jp">四</div>
+          <div class="era-year">1940s</div>
+          <div class="era-label">山城鼎盛期</div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-content">
+          <div class="era-img era-img-village">
+            <div class="era-img-label">礦工聚落・山城日常</div>
+          </div>
+          <div class="era-text-block">
+            <span class="era-tag">04 · 礦工生活</span>
+            <h2 class="era-title">礦工生活與山城聚落</h2>
+            <p class="era-p">礦業全盛時，數千名礦工攜家帶眷在水湳洞山坡定居，住宅沿陡峭地形層疊而建，密如蜂巢。學校、市場、戲院、廟宇一應俱全，孩子在階梯間嬉戲，廟口臭豆腐香氣飄滿整條街。</p>
+            <p class="era-p">礦工每日凌晨點著頭燈入坑，傍晚帶著礦塵歸來。山城居民守望相助，孕育出台灣礦業時代最濃厚的在地情感，那份人情溫度至今仍留在老一輩人的記憶中。</p>
+            <div class="era-chips">
+              <span>礦工家庭</span><span>山城聚落</span><span>廟口文化</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Era 05 -->
+      <article class="era" id="era-05">
+        <div class="era-aside">
+          <div class="era-num-jp">五</div>
+          <div class="era-year">1914</div>
+          <div class="era-label">鐵道開通</div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-content">
+          <div class="era-img era-img-train">
+            <div class="era-img-label">礦山鐵道・輕便鐵路</div>
+          </div>
+          <div class="era-text-block">
+            <span class="era-tag">05 · 交通發展</span>
+            <h2 class="era-title">礦山鐵道與交通發展</h2>
+            <p class="era-p">為將礦石運往基隆港出口，日本政府於1914年完成礦業鐵道，連結水湳洞礦區至基隆港，全長約16公里，最高點落差逾400公尺，工程難度極高。礦山輕便鐵道同步延伸至各坑口，礦車晝夜穿梭。</p>
+            <p class="era-p">1922年北部濱海公路開通，公路運輸補強鐵道不足，讓水湳洞對外交通更加便利，也吸引更多外地居民移入，使山城人口在戰後迅速擴張，形成今日所見的層疊聚落景觀。</p>
+            <div class="era-chips">
+              <span>礦山鐵道</span><span>輕便鐵路</span><span>北部濱海公路</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Era 06 -->
+      <article class="era era-reverse era-last" id="era-06">
+        <div class="era-aside">
+          <div class="era-num-jp">六</div>
+          <div class="era-year">1987</div>
+          <div class="era-label">至今</div>
+        </div>
+        <div class="era-content">
+          <div class="era-img era-img-modern">
+            <div class="era-img-label">文創轉型・咖啡山城</div>
+          </div>
+          <div class="era-text-block">
+            <span class="era-tag">06 · 近代轉型</span>
+            <h2 class="era-title">礦業落幕，文創新生</h2>
+            <p class="era-p">1987年，礦產耗盡加上全球銅價崩跌，水湳洞礦業正式走入歷史。居民陸續遷離，山城沉寂，十三層封閉，黃金瀑布與陰陽海重歸自然靜謐。</p>
+            <p class="era-p">2000年代起，攝影師、藝術家、咖啡師相繼移入，廢墟之美吸引旅人探訪，老宅化身民宿咖啡館，礦業記憶成為文創靈感。如今的水湳洞，以山海為舞台，靜靜訴說著屬於台灣的百年故事。</p>
+            <div class="era-chips">
+              <span>廢墟攝影</span><span>文青咖啡館</span><span>觀光山城</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Footer quote -->
+      <div class="hs-quote">
+        <div class="hs-quote-mark">—</div>
+        <blockquote>真正的旅行，不在遠方，<br>而在心能夠靜下來的地方。</blockquote>
+        <p class="hs-quote-src">水湳洞・等著你慢慢發現</p>
+        <button class="hs-map-cta" id="goToMap">
+          開始探索地圖
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+    </div><!-- /hs-body -->
+  </div><!-- /view-history -->
+
+  <!-- ══════════════════════════════════════
+       VIEW: 地圖 (景點 + 全部)
+  ══════════════════════════════════════ -->
+  <div class="view hidden" id="view-map">
+    <div class="map-layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-handle" id="sidebarHandle"></div>
+        <div class="sidebar-filter">
+          <button class="sf-btn active" data-cat="all">全部</button>
+          <button class="sf-btn" data-cat="景點">景點</button>
+          <button class="sf-btn" data-cat="美食">餐廳</button>
+          <button class="sf-btn" data-cat="住宿">住宿</button>
+          <button class="sf-btn" data-cat="其他">其他</button>
+        </div>
+        <div class="sidebar-inner">
+          <div class="sidebar-section" id="section-景點">
+            <div class="section-header"><span class="section-dot dot-blue"></span><h3>景點</h3><span class="section-count"></span></div>
+            <ul class="spot-list" id="list-景點"></ul>
+          </div>
+          <div class="sidebar-section" id="section-美食">
+            <div class="section-header"><span class="section-dot dot-green"></span><h3>餐廳・美食</h3><span class="section-count"></span></div>
+            <ul class="spot-list" id="list-美食"></ul>
+          </div>
+          <div class="sidebar-section" id="section-住宿">
+            <div class="section-header"><span class="section-dot dot-orange"></span><h3>住宿</h3><span class="section-count"></span></div>
+            <ul class="spot-list" id="list-住宿"></ul>
+          </div>
+          <div class="sidebar-section" id="section-其他">
+            <div class="section-header"><span class="section-dot dot-yellow"></span><h3>其他商家</h3><span class="section-count"></span></div>
+            <ul class="spot-list" id="list-其他"></ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Map -->
+      <div id="map"></div>
+
+      <!-- Detail Panel -->
+      <div id="detailPanel" class="detail-panel">
+        <div class="detail-panel-scroll">
+          <div class="dp-hero">
+            <img id="dpImg" src="" alt="" />
+            <button class="dp-close" id="dpClose">✕</button>
+            <div class="dp-hero-overlay"></div>
+            <div class="dp-hero-meta">
+              <span class="dp-hero-badge" id="dpBadge"></span>
+              <h2 class="dp-hero-name" id="dpName"></h2>
+            </div>
+          </div>
+          <div class="dp-body">
+            <div class="dp-tag-row" id="dpTagRow"></div>
+            <div class="dp-info-table" id="dpInfoTable"></div>
+            <div class="dp-section">
+              <div class="dp-section-label">地點介紹</div>
+              <p class="dp-desc" id="dpDesc"></p>
+            </div>
+            <div class="dp-highlights" id="dpHighlights"></div>
+            <div class="dp-actions">
+              <a id="dpMapLink" href="#" target="_blank" rel="noopener" class="dp-btn dp-btn-map">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Google Maps 導航
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div id="dpOverlay" class="dp-overlay"></div>
+  </div><!-- /view-map -->
+
+  <!-- ══════════════════════════════════════
+       VIEW: 餐廳 (美食列表)
+  ══════════════════════════════════════ -->
+  <div class="view hidden" id="view-food">
+    <div class="list-view">
+      <div class="list-header">
+        <p class="list-header-kana">しょくじ</p>
+        <h2 class="list-header-title">餐廳・美食</h2>
+        <p class="list-header-sub">16 家風味小店，從海景料理到山城咖啡</p>
+      </div>
+      <div class="card-grid" id="grid-美食"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       VIEW: 住宿 (住宿列表)
+  ══════════════════════════════════════ -->
+  <div class="view hidden" id="view-stay">
+    <div class="list-view">
+      <div class="list-header">
+        <p class="list-header-kana">しゅくはく</p>
+        <h2 class="list-header-title">住宿・民宿</h2>
+        <p class="list-header-sub">9 間山城住宿，醒來即是山海</p>
+      </div>
+      <div class="card-grid" id="grid-住宿"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       VIEW: 影音遊記
+  ══════════════════════════════════════ -->
+  <div class="view hidden" id="view-video">
+    <div class="video-page">
+
+      <!-- Header -->
+      <div class="video-page-header">
+        <div class="video-page-header-inner">
+          <div>
+            <p class="list-header-kana">どうが</p>
+            <h2 class="video-page-title">影音遊記</h2>
+            <p class="video-page-sub">精選 YouTuber 水湳洞旅遊實錄，每週更新推薦</p>
+          </div>
+          <div class="video-update-badge">
+            <span class="video-update-dot"></span>
+            每週精選推薦
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured carousel -->
+      <div class="video-carousel-wrap">
+        <button class="carousel-arrow carousel-prev" id="carouselPrev">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="video-carousel" id="videoCarousel">
+          <!-- filled by JS -->
+        </div>
+        <button class="carousel-arrow carousel-next" id="carouselNext">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <!-- Dots -->
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+
+      <!-- All videos grid -->
+      <div class="video-section-title">全部影片</div>
+      <div class="video-grid" id="videoGrid"></div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       VIEW: 網路資源
+  ══════════════════════════════════════ -->
+  <div class="view hidden" id="view-links">
+    <div class="links-page" id="linksPage">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+
+  <!-- ══════════════════════════════════════
+       景點/餐廳/住宿/其他 Detail Modal
+  ══════════════════════════════════════ -->
+  <div id="spotModal" class="spot-modal" role="dialog" aria-modal="true">
+    <div class="spot-modal-overlay" id="spotModalOverlay"></div>
+    <div class="spot-modal-box">
+      <button class="spot-modal-close" id="spotModalClose" aria-label="關閉">✕</button>
+      <button class="spot-modal-nav spot-modal-prev" id="spotModalPrev" aria-label="上一個">‹</button>
+      <button class="spot-modal-nav spot-modal-next" id="spotModalNext" aria-label="下一個">›</button>
+      <div class="spot-modal-scroll">
+        <img class="spot-modal-img" id="spotModalImg" src="" alt="">
+        <div class="spot-modal-body">
+          <div class="spot-modal-meta">
+            <span class="spot-modal-num" id="spotModalNum"></span>
+            <span class="spot-modal-cat" id="spotModalCat"></span>
+            <span class="spot-modal-counter" id="spotModalCounter"></span>
+          </div>
+          <h2 class="spot-modal-name" id="spotModalName"></h2>
+          <div class="spot-modal-info" id="spotModalInfo"></div>
+          <p class="spot-modal-desc" id="spotModalDesc"></p>
+          <div class="spot-modal-chips" id="spotModalChips"></div>
+          <div class="spot-modal-actions">
+            <a class="spot-modal-map-btn" id="spotModalMapBtn" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Google Maps 導航
+            </a>
+          </div>
+          <div class="spot-modal-strip-title">切換同分類景點</div>
+          <div class="spot-modal-strip" id="spotModalStrip"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ── Spot Detail Modal ──────────────────────────────
+  (function() {
+    var modalSpots = [], modalIndex = 0;
+    var catColors = { '景點':'#2C7BB6','美食':'#3A9E6A','住宿':'#E07A2F','其他':'#C9A227' };
+
+    function waitForSpots(cb) {
+      if (typeof spots !== 'undefined') cb();
+      else setTimeout(function(){ waitForSpots(cb); }, 60);
+    }
+
+    function openModal(spot, catSpots) {
+      modalSpots = catSpots;
+      modalIndex = catSpots.findIndex(function(s){ return s.id===spot.id && s.category===spot.category; });
+      renderModal(spot);
+      document.getElementById('spotModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function renderModal(spot) {
+      var color = catColors[spot.category] || '#555';
+      document.getElementById('spotModalImg').src = spot.image;
+      document.getElementById('spotModalImg').alt = spot.name;
+      var numEl = document.getElementById('spotModalNum');
+      numEl.textContent = spot.id;
+      numEl.style.background = color;
+      document.getElementById('spotModalCat').textContent = spot.category;
+      document.getElementById('spotModalCounter').textContent = (modalIndex+1) + ' / ' + modalSpots.length;
+      document.getElementById('spotModalName').textContent = spot.name;
+
+      var info = [];
+      if (spot.address) info.push('<div>📍 ' + spot.address + '</div>');
+      if (spot.phone)   info.push('<div>📞 ' + spot.phone + '</div>');
+      if (spot.hours)   info.push('<div>🕐 ' + spot.hours + '</div>');
+      document.getElementById('spotModalInfo').innerHTML = info.join('');
+      document.getElementById('spotModalDesc').textContent = spot.description;
+      document.getElementById('spotModalChips').innerHTML = (spot.highlights||[]).map(function(h){
+        return '<span class="spot-modal-chip">' + h + '</span>';
+      }).join('');
+
+      var q = encodeURIComponent(spot.mapQuery || spot.name);
+      document.getElementById('spotModalMapBtn').href =
+        'https://www.google.com/maps/search/' + q + '/@' + spot.lat + ',' + spot.lng + ',17z';
+
+      // 底部快速切換條
+      document.getElementById('spotModalStrip').innerHTML = modalSpots.map(function(s, i){
+        return '<button class="spot-modal-strip-btn' + (i===modalIndex?' active':'') +
+               '" data-idx="' + i + '">' + s.id + '. ' + s.name.slice(0,8) + (s.name.length>8?'…':'') + '</button>';
+      }).join('');
+
+      // Prev / Next 顯示
+      document.getElementById('spotModalPrev').style.opacity = modalIndex > 0 ? '1' : '0.25';
+      document.getElementById('spotModalPrev').style.pointerEvents = modalIndex > 0 ? '' : 'none';
+      document.getElementById('spotModalNext').style.opacity = modalIndex < modalSpots.length-1 ? '1' : '0.25';
+      document.getElementById('spotModalNext').style.pointerEvents = modalIndex < modalSpots.length-1 ? '' : 'none';
+
+      // 滾到頂端
+      var scroll = document.querySelector('.spot-modal-scroll');
+      if (scroll) scroll.scrollTop = 0;
+    }
+
+    function closeModal() {
+      document.getElementById('spotModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    waitForSpots(function() {
+      // 點任意卡片開啟 modal
+      document.addEventListener('click', function(e) {
+        var card = e.target.closest('.spot-card');
+        if (!card) return;
+        var name = (card.querySelector('.spot-card-name') || {}).textContent;
+        if (!name) return;
+        name = name.trim();
+        var spot = spots.find(function(s){ return s.name === name; });
+        if (!spot) return;
+        var catSpots = spots.filter(function(s){ return s.category === spot.category; });
+        openModal(spot, catSpots);
+      });
+
+      document.getElementById('spotModalClose').addEventListener('click', closeModal);
+      document.getElementById('spotModalOverlay').addEventListener('click', closeModal);
+
+      document.getElementById('spotModalPrev').addEventListener('click', function() {
+        if (modalIndex > 0) { modalIndex--; renderModal(modalSpots[modalIndex]); }
+      });
+      document.getElementById('spotModalNext').addEventListener('click', function() {
+        if (modalIndex < modalSpots.length-1) { modalIndex++; renderModal(modalSpots[modalIndex]); }
+      });
+
+      document.getElementById('spotModalStrip').addEventListener('click', function(e) {
+        var btn = e.target.closest('.spot-modal-strip-btn');
+        if (!btn) return;
+        modalIndex = parseInt(btn.dataset.idx);
+        renderModal(modalSpots[modalIndex]);
+      });
+
+      // 鍵盤：← → Esc
+      document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('spotModal').classList.contains('open')) return;
+        if (e.key==='Escape') closeModal();
+        if (e.key==='ArrowLeft'  && modalIndex>0) { modalIndex--; renderModal(modalSpots[modalIndex]); }
+        if (e.key==='ArrowRight' && modalIndex<modalSpots.length-1) { modalIndex++; renderModal(modalSpots[modalIndex]); }
+      });
+    });
+  })();
+  </script>
+
+  <script>
+    // 手機版 sidebar 把手點擊開關
+    (function() {
+      var handle = document.getElementById('sidebarHandle');
+      var filterBar = document.querySelector('.sidebar-filter');
+      var sidebar = document.getElementById('sidebar');
+      function isMobile() { return window.innerWidth <= 768; }
+      if (handle) handle.addEventListener('click', function() {
+        if (isMobile()) sidebar.classList.toggle('open');
+      });
+      if (filterBar) filterBar.addEventListener('click', function(e) {
+        // 若點的是分類按鈕本身，不觸發展開（讓按鈕正常運作）
+        if (e.target.classList.contains('sf-btn')) return;
+        if (isMobile()) sidebar.classList.toggle('open');
+      });
+    })();
+  </script>
+</body>
+</html>
